@@ -4,10 +4,9 @@ Training Data: https://motchallenge.net/data/MOT16/
 
 ```text
 root/
-├── data/
-│   └── MOT16/
+├── MOT16/
 │       ├── train/
 │       └── test/
-├── models/
+├── MOT16-model/
 │   └── faster_rcnn_mot16_checkpoint.pth
 └── Faster_RCNN.ipynb

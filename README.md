@@ -2,7 +2,7 @@
 
 ## Using Mask R-CNN and Siamese Re-Identification
 
-**CS 5542 — Deep Learning | University of Missouri–Kansas City | April 2026**
+**CS 5567 — Deep Learning | University of Missouri–Kansas City | April 2026**
 
 **Team Members:** Joe Doan, Cory Stever, Ibrahim Alborno
 
@@ -137,4 +137,4 @@ Or manually: upload `Full_Pipeline.ipynb` to Google Colab, select **GPU runtime*
 
 ---
 
-*CS 5542 Deep Learning — University of Missouri–Kansas City*
+*CS 5567 Deep Learning — University of Missouri–Kansas City*

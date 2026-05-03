@@ -75,7 +75,7 @@ MyDrive/
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JoeDoan/-Deep_Learning_Project/blob/main/Full_Pipeline.ipynb)
 
-Or manually: upload `Full_Pipeline.ipynb` to Google Colab, select **GPU runtime** (Runtime → Change runtime type → T4 GPU), and hit **Run All**.
+Or manually: upload `Full_Pipeline.ipynb` to Google Colab, select **GPU runtime** (Runtime → Change runtime type → NVIDIA A100 GPU), and hit **Run All**.
 
 #### Step 3: What Happens
 
@@ -85,7 +85,7 @@ Or manually: upload `Full_Pipeline.ipynb` to Google Colab, select **GPU runtime*
 | **Part 2** | Loads ReID checkpoint, evaluates on Market-1501, generates plots | ~5 min |
 | **Part 3** | Runs full tracking pipeline on MOT16-09 (525 frames) | ~10 min |
 
-> **Note:** If checkpoints are found, training loops are skipped automatically. Without checkpoints, full training takes ~2 hours (Part 1) + ~1.5 hours (Part 2) on a T4 GPU.
+> **Note:** If checkpoints are found, training loops are skipped automatically. Without checkpoints, full training takes ~2 hours (Part 1) + ~1.5 hours (Part 2) on a NVIDIA A100 GPU.
 
 ---
 

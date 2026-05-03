@@ -1,4 +1,6 @@
-# Video Object Tracking on MOT16 Using Mask R-CNN and Siamese Re-Identification
+# Video Object Tracking on MOT16
+
+## Using Mask R-CNN and Siamese Re-Identification
 
 **CS 5542 — Deep Learning | University of Missouri–Kansas City | April 2026**
 
@@ -8,24 +10,17 @@
 
 ## Overview
 
-This project implements a complete **end-to-end multi-pedestrian tracking pipeline** on the [MOT16](https://motchallenge.net/data/MOT16/) benchmark. The system integrates three core components:
+This project implements a complete **end-to-end multi-pedestrian tracking pipeline** on the MOT16 benchmark, combining three core components:
 
-1. **Mask R-CNN Detector** — Fine-tuned on MOT16 for person detection and instance segmentation
-2. **Siamese ReID Network** — Trained on Market-1501 for appearance-based person re-identification
-3. **DeepSORT-Style Tracker** — Hungarian algorithm with combined IoU + cosine distance cost matrix for cross-frame identity association
+| Component | Architecture | Dataset | Key Result |
+|-----------|-------------|---------|------------|
+| **Detector** | Mask R-CNN (ResNet-50-FPN) | MOT16 | Val loss: **0.3783** |
+| **ReID** | Siamese Network + BN Neck | Market-1501 | mAP: **73.93%**, Rank-1: **89.22%** |
+| **Tracker** | DeepSORT-style (Hungarian) | MOT16-09 | **22 IDs** across **525 frames** |
 
-### Key Results
-
-| Component | Metric | Value |
-|-----------|--------|-------|
-| ReID | mAP (Market-1501) | **73.93%** |
-| ReID | Rank-1 Accuracy | **89.22%** |
-| ReID | Rank-5 Accuracy | 96.05% |
-| ReID | Rank-10 Accuracy | 97.45% |
-| Tracker | Sequence | MOT16-09 |
-| Tracker | Total Frames | 525 |
-| Tracker | Unique IDs | **22** |
-| Tracker | Track Entries | 4,480 |
+```
+Frame → Detect (Mask R-CNN) → Crop → ReID Embed (Siamese) → Hungarian Match → Track → Video
+```
 
 ---
 
@@ -33,103 +28,113 @@ This project implements a complete **end-to-end multi-pedestrian tracking pipeli
 
 ```
 .
-├── README.md                           # This file
-├── Full_Pipeline.ipynb                 # ⭐ Complete pipeline (all 3 parts merged)
-├── report/                             # Project report
-│   └── Object_Tracking.pdf             # Final compiled report (PDF)
-├── figures/                            # All figures used in the report
-│   ├── det_sample_data.png             # MOT16 training data samples
-│   ├── det_training_curves.png         # Mask R-CNN training/val loss curves
-│   ├── det_inference_sample.png        # Detector inference results
-│   ├── reid_training_curves.png        # ReID loss & LR schedule
-│   ├── reid_cmc_curve.png              # CMC curve (Rank-1 = 89.22%)
-│   ├── reid_baseline_comparison.png    # Baseline vs improved ReID comparison
-│   ├── reid_tsne.png                   # t-SNE embedding visualization
-│   ├── reid_top5_matches.png           # Top-5 gallery match examples
-│   └── tracking_sample_frames.png      # Tracking output on MOT16-09
-├── MaskRCNN_A100_Tracking-2.ipynb      # Part 1: Mask R-CNN detector
-├── ReID_Improved.ipynb                 # Part 2: Siamese ReID network
-└── Tracking_Pipeline.ipynb             # Part 3: Integrated tracking pipeline
+├── README.md                  # This file
+├── Full_Pipeline.ipynb        # ⭐ Complete pipeline notebook (all 3 parts)
+├── figures/                   # All evaluation figures
+│   ├── det_sample_data.png
+│   ├── det_training_curves.png
+│   ├── det_inference_sample.png
+│   ├── reid_training_curves.png
+│   ├── reid_cmc_curve.png
+│   ├── reid_baseline_comparison.png
+│   ├── reid_tsne.png
+│   ├── reid_top5_matches.png
+│   └── tracking_sample_frames.png
+└── report/
+    └── Object_Tracking.pdf    # Final project report
 ```
 
-> **📌 Start here:** [`Full_Pipeline.ipynb`](submission/Full_Pipeline.ipynb) contains all three parts in a single notebook with all outputs preserved. The individual notebooks are also included for reference.
-
 ---
 
-## Pipeline Architecture
+## Quick Start
 
+### 1. View Results (No Setup Required)
+
+Open [`Full_Pipeline.ipynb`](Full_Pipeline.ipynb) directly on GitHub — all outputs (training logs, plots, metrics, tracking frames) are pre-rendered.
+
+### 2. Run the Pipeline
+
+The notebook is designed for **Google Colab** with GPU runtime.
+
+#### Step 1: Download Model Checkpoints
+
+Pre-trained checkpoints are available on Google Drive:
+
+📥 **[Download Checkpoints](https://drive.google.com/drive/folders/187jDH2i2iyabvQlm3g950IwyL0xHLnLo?usp=sharing)**
+
+Upload the checkpoints to your Google Drive at these paths:
 ```
-Frame → Detect (Mask R-CNN) → Crop → ReID Embed (Siamese) → Hungarian Match → Track → Video
+MyDrive/
+├── MaskRCNN_MOT16/
+│   └── maskrcnn_mot16_checkpoint.pth    # Mask R-CNN detector weights
+└── ReID_Checkpoints/
+    └── reid_improved_v2.pth             # Siamese ReID model weights
 ```
 
-### 1. Person Detection — Mask R-CNN (ResNet-50-FPN)
+#### Step 2: Open in Colab
 
-- **Backbone:** ResNet-50-FPN, pretrained on COCO
-- **Training:** 40 epochs on MOT16 with A100 GPU, AMP (mixed precision)
-- **Optimizer:** AdamW with differential learning rates (Heads: 3e-3, Backbone: 3e-4)
-- **LR Schedule:** Linear warmup (4 epochs) + Cosine annealing
-- **Best validation loss:** 0.3783
-- **Notebook:** `MaskRCNN_A100_Tracking-2.ipynb`
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JoeDoan/-Deep_Learning_Project/blob/main/Full_Pipeline.ipynb)
 
-### 2. Person Re-Identification — Improved Siamese Network
+Or manually: upload `Full_Pipeline.ipynb` to Google Colab, select **GPU runtime** (Runtime → Change runtime type → T4 GPU), and hit **Run All**.
 
-- **Backbone:** ResNet-50 with BN Neck (Luo et al., 2019)
-- **Embedding:** 256-dimensional L2-normalized features
-- **Loss:** Triplet Loss + Cross-Entropy with label smoothing
-- **Training:** 80 epochs on Market-1501 with warmup + cosine annealing
-- **Performance:** 73.93% mAP, 89.22% Rank-1
-- **Notebook:** `ReID_Improved.ipynb`
+#### Step 3: What Happens
 
-### 3. Multi-Object Tracking — DeepSORT-Style
+| Part | What Runs | Time |
+|------|-----------|------|
+| **Part 1** | Loads Mask R-CNN checkpoint, runs evaluation & visualization | ~2 min |
+| **Part 2** | Loads ReID checkpoint, evaluates on Market-1501, generates plots | ~5 min |
+| **Part 3** | Runs full tracking pipeline on MOT16-09 (525 frames) | ~10 min |
 
-- **Cost matrix:** 50% IoU + 50% cosine distance
-- **Association:** Hungarian algorithm with cost gate = 0.7
-- **EMA update:** α = 0.8 for embedding smoothing
-- **Max missed frames:** 90 (before track deletion)
-- **Notebook:** `Tracking_Pipeline.ipynb`
+> **Note:** If checkpoints are found, training loops are skipped automatically. Without checkpoints, full training takes ~2 hours (Part 1) + ~1.5 hours (Part 2) on a T4 GPU.
 
 ---
 
-## How to Run
+## Results
 
-All notebooks are designed to run on **Google Colab** with GPU acceleration (A100 recommended).
+### Person Detection (Mask R-CNN)
 
-### Prerequisites
+| Metric | Value |
+|--------|-------|
+| Best Validation Loss | **0.3783** |
+| Training Epochs | 40 (early stop at ~35) |
+| GPU | NVIDIA A100 with AMP |
 
-- Google Colab with GPU runtime
-- MOT16 dataset uploaded to Google Drive at `/content/drive/MyDrive/Colab Notebooks/MOT16/`
-- Market-1501 dataset (for ReID training)
+### Person Re-Identification (Siamese Network)
 
-### Execution Order
+| Metric | Value |
+|--------|-------|
+| mAP | **73.93%** |
+| Rank-1 Accuracy | **89.22%** |
+| Rank-5 Accuracy | 96.05% |
+| Rank-10 Accuracy | 97.45% |
 
-1. **Train the detector:**
-   Open and run `MaskRCNN_A100_Tracking-2.ipynb` — trains Mask R-CNN on MOT16
+### Multi-Object Tracking (DeepSORT-Style)
 
-2. **Train the ReID model:**
-   Open and run `ReID_Improved.ipynb` — trains the Siamese network on Market-1501
-
-3. **Run the tracking pipeline:**
-   Open and run `Tracking_Pipeline.ipynb` — integrates detector + ReID for end-to-end tracking on MOT16-09
-
----
-
-## Report
-
-The final project report is available as a pre-compiled PDF at [`report/Object_Tracking.pdf`](submission/report/Object_Tracking.pdf).
-
----
-
-## References
-
-1. He, K., et al. (2017). *Mask R-CNN*. ICCV.
-2. Wojke, N., et al. (2017). *Simple Online and Realtime Tracking with a Deep Association Metric*. ICIP.
-3. Luo, H., et al. (2019). *Bag of Tricks and a Strong Baseline for Deep Person Re-identification*. CVPRW.
-4. Hermans, A., et al. (2017). *In Defense of the Triplet Loss for Person Re-Identification*.
-5. Milan, A., et al. (2016). *MOT16: A Benchmark for Multi-Object Tracking*.
-6. Zheng, L., et al. (2015). *Scalable Person Re-identification: A Benchmark*. ICCV.
+| Metric | Value |
+|--------|-------|
+| Total Frames | 525 |
+| Unique IDs Tracked | **22** |
+| Total Track Entries | 4,480 |
+| Cost Function | 50% IoU + 50% Cosine Distance |
 
 ---
 
-## License
+## Technical Details
 
-This project was developed as part of the CS 5542 Deep Learning course at UMKC.
+### Architecture
+
+- **Detector:** Mask R-CNN with ResNet-50-FPN backbone, fine-tuned on MOT16 with AdamW, differential learning rates, linear warmup + cosine annealing
+- **ReID:** Improved Siamese Network with ResNet-50 backbone, BN Neck (Luo et al., 2019), 256-d embeddings, Triplet + Cross-Entropy loss with label smoothing
+- **Tracker:** Hungarian algorithm with composite cost matrix (IoU + cosine distance), EMA embedding updates (α=0.8), max missed frames = 90
+
+### Key References
+
+1. He et al. (2017) — *Mask R-CNN*, ICCV
+2. Wojke et al. (2017) — *Simple Online and Realtime Tracking with a Deep Association Metric*, ICIP
+3. Luo et al. (2019) — *Bag of Tricks and a Strong Baseline for Deep Person Re-identification*, CVPRW
+4. Hermans et al. (2017) — *In Defense of the Triplet Loss for Person Re-Identification*
+5. Milan et al. (2016) — *MOT16: A Benchmark for Multi-Object Tracking*
+
+---
+
+*CS 5542 Deep Learning — University of Missouri–Kansas City*

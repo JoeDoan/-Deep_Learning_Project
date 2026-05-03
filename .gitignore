@@ -1,31 +1,21 @@
-# OS files
+# Development files (individual notebooks, scripts, checkpoints)
+dev/
+
+# macOS
 .DS_Store
 
 # Python
 __pycache__/
+*.pyc
+*.pyo
+
+# Checkpoints (too large for GitHub)
+*.pth
+*.pt
+
+# Jupyter
 .ipynb_checkpoints/
 
-# Data & models (large files)
-MOT16/
-*.pth
-
-# Working files (not for submission)
-*.py
-*.md.submit
-group_project.md
-report.md
-report.tex
-Group\ Project.pdf
-midterm_video_object_tracking_notebook-2.ipynb
-final_video_object_tracking_notebook.ipynb
-
-# Root-level notebook copies (submission/ has the clean versions)
-/MaskRCNN_A100_Tracking-2.ipynb
-/ReID_Improved.ipynb
-/Tracking_Pipeline.ipynb
-
-# Keep these
-!README.md
-!submission/
-/figures/
-/MOT16-model/
+# IDE
+.vscode/
+.idea/

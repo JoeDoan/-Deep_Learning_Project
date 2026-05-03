@@ -33,25 +33,26 @@ This project implements a complete **end-to-end multi-pedestrian tracking pipeli
 
 ```
 .
-├── README.md                                   # This file
-└── submission/                                 # Project deliverable
-    ├── README.md                               # Detailed project README
-    ├── report/                                 # Project report
-    │   └── Object_Tracking.pdf                 # Final compiled report (PDF)
-    ├── figures/                                # All figures used in the report
-    │   ├── det_sample_data.png                 # MOT16 training data samples
-    │   ├── det_training_curves.png             # Mask R-CNN training/val loss curves
-    │   ├── det_inference_sample.png            # Detector inference results
-    │   ├── reid_training_curves.png            # ReID loss & LR schedule
-    │   ├── reid_cmc_curve.png                  # CMC curve (Rank-1 = 89.22%)
-    │   ├── reid_baseline_comparison.png        # Baseline vs improved ReID comparison
-    │   ├── reid_tsne.png                       # t-SNE embedding visualization
-    │   ├── reid_top5_matches.png               # Top-5 gallery match examples
-    │   └── tracking_sample_frames.png          # Tracking output on MOT16-09
-    ├── MaskRCNN_A100_Tracking-2.ipynb          # Mask R-CNN detector notebook
-    ├── ReID_Improved.ipynb                     # Siamese ReID network notebook
-    └── Tracking_Pipeline.ipynb                 # Integrated tracking pipeline notebook
+├── README.md                           # This file
+├── Full_Pipeline.ipynb                 # ⭐ Complete pipeline (all 3 parts merged)
+├── report/                             # Project report
+│   └── Object_Tracking.pdf             # Final compiled report (PDF)
+├── figures/                            # All figures used in the report
+│   ├── det_sample_data.png             # MOT16 training data samples
+│   ├── det_training_curves.png         # Mask R-CNN training/val loss curves
+│   ├── det_inference_sample.png        # Detector inference results
+│   ├── reid_training_curves.png        # ReID loss & LR schedule
+│   ├── reid_cmc_curve.png              # CMC curve (Rank-1 = 89.22%)
+│   ├── reid_baseline_comparison.png    # Baseline vs improved ReID comparison
+│   ├── reid_tsne.png                   # t-SNE embedding visualization
+│   ├── reid_top5_matches.png           # Top-5 gallery match examples
+│   └── tracking_sample_frames.png      # Tracking output on MOT16-09
+├── MaskRCNN_A100_Tracking-2.ipynb      # Part 1: Mask R-CNN detector
+├── ReID_Improved.ipynb                 # Part 2: Siamese ReID network
+└── Tracking_Pipeline.ipynb             # Part 3: Integrated tracking pipeline
 ```
+
+> **📌 Start here:** [`Full_Pipeline.ipynb`](submission/Full_Pipeline.ipynb) contains all three parts in a single notebook with all outputs preserved. The individual notebooks are also included for reference.
 
 ---
 
@@ -68,7 +69,7 @@ Frame → Detect (Mask R-CNN) → Crop → ReID Embed (Siamese) → Hungarian Ma
 - **Optimizer:** AdamW with differential learning rates (Heads: 3e-3, Backbone: 3e-4)
 - **LR Schedule:** Linear warmup (4 epochs) + Cosine annealing
 - **Best validation loss:** 0.3783
-- **Notebook:** [`MaskRCNN_A100_Tracking-2.ipynb`](submission/MaskRCNN_A100_Tracking-2.ipynb)
+- **Notebook:** `MaskRCNN_A100_Tracking-2.ipynb`
 
 ### 2. Person Re-Identification — Improved Siamese Network
 
@@ -77,7 +78,7 @@ Frame → Detect (Mask R-CNN) → Crop → ReID Embed (Siamese) → Hungarian Ma
 - **Loss:** Triplet Loss + Cross-Entropy with label smoothing
 - **Training:** 80 epochs on Market-1501 with warmup + cosine annealing
 - **Performance:** 73.93% mAP, 89.22% Rank-1
-- **Notebook:** [`ReID_Improved.ipynb`](submission/ReID_Improved.ipynb)
+- **Notebook:** `ReID_Improved.ipynb`
 
 ### 3. Multi-Object Tracking — DeepSORT-Style
 
@@ -85,7 +86,7 @@ Frame → Detect (Mask R-CNN) → Crop → ReID Embed (Siamese) → Hungarian Ma
 - **Association:** Hungarian algorithm with cost gate = 0.7
 - **EMA update:** α = 0.8 for embedding smoothing
 - **Max missed frames:** 90 (before track deletion)
-- **Notebook:** [`Tracking_Pipeline.ipynb`](submission/Tracking_Pipeline.ipynb)
+- **Notebook:** `Tracking_Pipeline.ipynb`
 
 ---
 
@@ -102,19 +103,19 @@ All notebooks are designed to run on **Google Colab** with GPU acceleration (A10
 ### Execution Order
 
 1. **Train the detector:**
-   Open and run [`MaskRCNN_A100_Tracking-2.ipynb`](submission/MaskRCNN_A100_Tracking-2.ipynb) — trains Mask R-CNN on MOT16
+   Open and run `MaskRCNN_A100_Tracking-2.ipynb` — trains Mask R-CNN on MOT16
 
 2. **Train the ReID model:**
-   Open and run [`ReID_Improved.ipynb`](submission/ReID_Improved.ipynb) — trains the Siamese network on Market-1501
+   Open and run `ReID_Improved.ipynb` — trains the Siamese network on Market-1501
 
 3. **Run the tracking pipeline:**
-   Open and run [`Tracking_Pipeline.ipynb`](submission/Tracking_Pipeline.ipynb) — integrates detector + ReID for end-to-end tracking on MOT16-09
+   Open and run `Tracking_Pipeline.ipynb` — integrates detector + ReID for end-to-end tracking on MOT16-09
 
 ---
 
 ## Report
 
-The final project report is available as a pre-compiled PDF at [`Object_Tracking.pdf`](submission/report/Object_Tracking.pdf).
+The final project report is available as a pre-compiled PDF at [`report/Object_Tracking.pdf`](submission/report/Object_Tracking.pdf).
 
 ---
 

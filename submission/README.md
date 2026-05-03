@@ -34,6 +34,7 @@ This project implements a complete **end-to-end multi-pedestrian tracking pipeli
 ```
 .
 ├── README.md                           # This file
+├── Full_Pipeline.ipynb                 # ⭐ Complete pipeline (all 3 parts merged)
 ├── report/                             # Project report
 │   └── Object_Tracking.pdf             # Final compiled report (PDF)
 ├── figures/                            # All figures used in the report
@@ -46,10 +47,12 @@ This project implements a complete **end-to-end multi-pedestrian tracking pipeli
 │   ├── reid_tsne.png                   # t-SNE embedding visualization
 │   ├── reid_top5_matches.png           # Top-5 gallery match examples
 │   └── tracking_sample_frames.png      # Tracking output on MOT16-09
-├── MaskRCNN_A100_Tracking-2.ipynb      # Mask R-CNN detector notebook
-├── ReID_Improved.ipynb                 # Siamese ReID network notebook
-└── Tracking_Pipeline.ipynb             # Integrated tracking pipeline notebook
+├── MaskRCNN_A100_Tracking-2.ipynb      # Part 1: Mask R-CNN detector
+├── ReID_Improved.ipynb                 # Part 2: Siamese ReID network
+└── Tracking_Pipeline.ipynb             # Part 3: Integrated tracking pipeline
 ```
+
+> **📌 Start here:** [`Full_Pipeline.ipynb`](Full_Pipeline.ipynb) contains all three parts in a single notebook with all outputs preserved. The individual notebooks are also included for reference.
 
 ---
 

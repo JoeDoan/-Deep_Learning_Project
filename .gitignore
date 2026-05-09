@@ -1,0 +1,21 @@
+# Development files (individual notebooks, scripts, checkpoints)
+dev/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Checkpoints (too large for GitHub)
+*.pth
+*.pt
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/

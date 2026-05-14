@@ -28,9 +28,9 @@ Frame → Detect (Mask R-CNN) → Crop → ReID Embed (Siamese) → Hungarian Ma
 
 ```
 .
-├── README.md                  # This file
+├── README.md                  
 ├── final submission/
-│   └── Full_Pipeline.ipynb    # ⭐ Complete pipeline notebook (all 3 parts)
+│   └── Full_Pipeline.ipynb    # Complete pipeline notebook (all 3 parts)
 ├── notebooks/                 # Standalone development notebooks
 │   ├── MaskRCNN_A100_Tracking-2.ipynb
 │   ├── ReID_Improved.ipynb
